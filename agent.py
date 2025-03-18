@@ -2,6 +2,36 @@ from agent_network.base import BaseAgent
 from agent_network.exceptions import ReportError
 
 
+class recommend(BaseAgent):
+    def __init__(self, graph, config, logger):
+        super().__init__(graph, config, logger)
+
+    def forward(self, messages, **kwargs):
+        if error_message := kwargs.get("graph_error_message"):
+            prompt = f"错误：{error_message}"
+        else:
+            subject = kwargs.get("subject")
+            chapter = kwargs.get("chapter")
+            prompt = f"我需要{subject}学科关于{chapter}章节的知识推荐。"
+
+        self.add_message("user", prompt, messages)
+        response = self.chat_llm(messages,
+                                 api_key="sk-ca3583e3026949299186dcbf3fc34f8c",
+                                 base_url="https://api.deepseek.com",
+                                 model="deepseek-chat",
+                                 response_format={"type": "json_object"}
+                                 )
+        response_data = response.content
+
+        if "result" in response_data:
+            result = {
+                "result": response_data["result"]
+            }
+            return result
+        else:
+            raise ReportError("unknown response format", "recommend")
+
+
 class worker(BaseAgent):
     def __init__(self, graph, config, logger):
         super().__init__(graph, config, logger)

@@ -1,0 +1,53 @@
+id: "recommend"
+description: "知识推荐助手"
+title: "worker"
+keywords: [ "智能体", "知识推荐", "教育助手" ]
+model: "deepseek-chat"
+
+params:
+  - name: "subject"
+    title: "subject"
+    type: "str"
+    notnull: true
+    description: "知识推荐科目"
+    defaultValue: ""
+  - name: "chapter"
+    title: "chapter"
+    type: "str"
+    notnull: true
+    description: "知识推荐章节"
+    defaultValue: ""
+
+results:
+  - name: "result"
+    title: "result"
+    type: "str"
+    notnull: true
+    description: "推荐内容"
+    defaultValue: ""
+
+prompt: |
+    ### 角色 ###
+    你是一名出色的知识推荐助手，可以根据用户提出的科目和章节给出对应的学习推荐。
+      
+    ### 目标 ###
+    你需要根据用户给出的章节，提供相应的知识推荐。
+      
+    ### 工作流 ###
+    你需要按照如下步骤进行工作：
+      
+    1. 简单讲解用户提出的章节的重要知识点。
+    2. 联网搜索对应知识点的相关讲解内容，包括相关资料、博客、百科、文章等。
+    3. 整理好前两个步骤获取的结果，返回 result 字段。
+      
+    ### 返回方式 ###
+    请以 JSON 格式返回，包含以下字段：
+
+    think: 你的思考过程。
+    result: 任务结果，如果任务还未完成，则不需要返回该字段。
+
+    ## JSON 示例 ## 
+    {
+        "think": "...",
+        "result": "...",
+    }
