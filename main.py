@@ -10,17 +10,18 @@ app = Flask(__name__)
 @app.route('/service', methods=['POST'])
 def service():
     context = request.json
+    print(context)
     assert context['flowId'] is not None, "智能体流程节点未找到"
     assert context['task'] is not None, "智能体任务未找到"
     graph = Graph(logger)
     graph.execute(network, context['flowId'], context.get("params"), context.get("results"))
-    result = graph.retrieve_results()
+    result = graph.retrieve_results(context.get("results"))
     graph.release()
     return result
 
 
 def run_web(debug=False):
-    app.run(host='0.0.0.0', port=18080, debug=debug)
+    app.run(host='0.0.0.0', port=18081, debug=debug)
 
 
 if __name__ == '__main__':
