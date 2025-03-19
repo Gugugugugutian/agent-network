@@ -14,6 +14,9 @@ class recommend(BaseAgent):
             chapter = kwargs.get("chapter")
             prompt = f"我需要{subject}学科关于{chapter}章节的知识推荐。"
 
+            if resources_result := kwargs.get("resources_result"):
+                prompt += f"\n\n联网搜索的结果为： {resources_result}"
+
         self.add_message("user", prompt, messages)
         response = self.chat_llm(messages,
                                  api_key="sk-ca3583e3026949299186dcbf3fc34f8c",
@@ -23,11 +26,44 @@ class recommend(BaseAgent):
                                  )
         response_data = response.content
 
-        if "result" in response_data:
+        if "tool_name" in response_data:
+            result = {**response_data["tool_args"]}
+            return result, response_data["tool_name"]
+        elif "result" in response_data:
             result = {
                 "result": response_data["result"]
             }
             return result
+        else:
+            raise ReportError("unknown response format", "recommend")
+
+
+class resources_tool(BaseAgent):
+    def __init__(self, graph, config, logger):
+        super().__init__(graph, config, logger)
+
+    def forward(self, messages, **kwargs):
+        if error_message := kwargs.get("graph_error_message"):
+            prompt = f"错误：{error_message}"
+        else:
+            subject = kwargs.get("subject")
+            chapter = kwargs.get("chapter")
+            prompt = f"请给出{subject}学科，{chapter}章节的推荐知识资源。"
+
+        self.add_message("user", prompt, messages)
+        response = self.chat_llm(messages,
+                                 api_key="sk-ca3583e3026949299186dcbf3fc34f8c",
+                                 base_url="https://api.deepseek.com",
+                                 model="deepseek-chat",
+                                 response_format={"type": "json_object"}
+                                 )
+        response_data = response.content
+
+        if "resources_result" in response_data:
+            result = {
+                "resources_result": response_data["resources_result"]
+            }
+            return result, "recommend"
         else:
             raise ReportError("unknown response format", "recommend")
 
@@ -58,7 +94,6 @@ class worker(BaseAgent):
         if "tool_name" in response_data:
             result = {**response_data["tool_args"]}
             return result, response_data["tool_name"]
-            # return result
         elif "result" in response_data:
             result = {
                 "result": response_data["result"]

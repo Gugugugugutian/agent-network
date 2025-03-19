@@ -1,0 +1,20 @@
+{
+  "group": "RecommendGroup",
+  "links": [
+    {
+      "source": "start",
+      "target": "recommend",
+      "type": "soft"
+    },
+    {
+      "source": "recommend",
+      "target": "resources_tool",
+      "type": "soft"
+    },
+    {
+      "source": "resources_tool",
+      "target": "recommend",
+      "type": "hard"
+    }
+  ]
+}

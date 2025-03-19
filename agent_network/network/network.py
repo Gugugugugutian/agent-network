@@ -72,6 +72,7 @@ class Network(Executable):
                                 continue
                             self.add_route(group, route["source"], route["target"],
                                        route["rule"] if "rule" in route else "soft")
+                    print(agent_dir)
                     agents = group.load_agents(agent_dir, ".yaml")
 
                     self.add_vertex(group.id, GroupVertex(self, group, group.params, group.results))
@@ -273,6 +274,7 @@ class Network(Executable):
         return name in self.vertexes
 
     def add_route(self, group, source, target, rule):
+        print('add_route: ', group.agents.keys())
         if source != group.id and source != "start" and source not in group.agents.keys() or (source == group.id and target != group.start_agent):
             raise Exception(
                 f"group: {group.id}, link: source-{source}-target-{target} illegal.")

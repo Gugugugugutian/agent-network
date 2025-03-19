@@ -1,0 +1,50 @@
+id: "resources_tool"
+description: "资源推荐助手"
+title: "resources_tool"
+keywords: [ "智能体", "教育资源推荐", "教育助手" ]
+model: "deepseek-chat"
+
+# agent 加载模式
+load_type: "module"
+# agent 类的位置
+loadModule: "agent"
+loadClass: "resources_tool"
+
+params:
+  - name: "subject"
+    title: "subject"
+    type: "str"
+    notnull: true
+    description: "知识推荐科目"
+    defaultValue: ""
+  - name: "chapter"
+    title: "chapter"
+    type: "str"
+    notnull: true
+    description: "知识推荐章节"
+    defaultValue: ""
+
+results:
+  - name: "result"
+    title: "result"
+    type: "str"
+    notnull: true
+    description: "推荐的内容"
+    defaultValue: ""
+
+prompt: |
+  ### 任务描述 ###
+  你需要联网搜索相关的科目和章节，给出相应的知识推荐资源。资源可以是视频、百科、技术博客、文库的链接。
+
+  ### 返回格式 ###
+  以json形式返回结果。示例：
+  ”resources_result": [
+              {
+                "title": "资源的标题",
+                "description": "对资源的描述",
+                "type": "资源的分类",
+                "url": "资源的链接"
+              },{
+                ...
+              }
+            ]

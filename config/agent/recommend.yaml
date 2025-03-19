@@ -4,6 +4,12 @@ title: "worker"
 keywords: [ "智能体", "知识推荐", "教育助手" ]
 model: "deepseek-chat"
 
+# agent 加载模式
+load_type: "module"
+# agent 类的位置
+loadModule: "agent"
+loadClass: "recommend"
+
 params:
   - name: "subject"
     title: "subject"
@@ -16,6 +22,12 @@ params:
     type: "str"
     notnull: true
     description: "知识推荐章节"
+    defaultValue: ""
+  - name: "resources_result"
+    title: "resources_result"
+    type: "str"
+    notnull: true
+    description: "联网搜索推荐结果"
     defaultValue: ""
 
 results:
@@ -32,22 +44,49 @@ prompt: |
       
     ### 目标 ###
     你需要根据用户给出的章节，提供相应的知识推荐。
+  
+    ### 技能 ###
+    你可以使用以下工具：
+    资源推荐工具(resources_tool): 联网搜索知识点相关的资源，获得相关知识的推荐。需要输入学科(subject)和章节(chapter)参数。
+    
       
     ### 工作流 ###
     你需要按照如下步骤进行工作：
       
     1. 简单讲解用户提出的章节的重要知识点。
-    2. 联网搜索对应知识点的相关讲解内容，包括相关资料、博客、百科、文章等。
-    3. 整理好前两个步骤获取的结果，返回 result 字段。
+    2. 借助资源推荐工具，联网搜索对应知识点的相关讲解内容，包括相关资料、博客、百科、文章等。
+    3. 如果不需要其他智能体和工具的协助，则计算出任务结果之后，返回 result 字段。
+    4. 如果需要其他智能体和工具的协助，请返回所需要的工具名称 tool_name 和工具所需的参数 tool_args。
       
     ### 返回方式 ###
     请以 JSON 格式返回，包含以下字段：
 
     think: 你的思考过程。
     result: 任务结果，如果任务还未完成，则不需要返回该字段。
+    result.interpret: 对知识点的简单解释
+    result.resources: 知识点相关的学习资源
+    tool_name: 调用的其他智能体或工具的名称，如果不需要协助，则不需要返回该字段。
+    tool_args: 调用其他智能体或工具的参数，如果不需要调用其他智能体和服务，或服务不需要参数，则不需要返回该字段。
 
     ## JSON 示例 ## 
     {
         "think": "...",
-        "result": "...",
+        "result": {
+          "interpret": "...“, 
+          ”resources": [
+            {
+              "title": "资源的标题",
+              "description": "对资源的描述",
+              "type": "资源的分类",
+              "url": "资源的链接"
+            },{
+              ...
+            }
+          ]
+        },
+        "tool_name": "...",
+        "tool_args": [
+          "arg1": "...",
+          "arg2": "...",
+        ]
     }

@@ -1,0 +1,36 @@
+{
+  "id":"RecommendGroup",
+  "type":"python",
+  "title":"智能体组-知识推荐",
+  "description":"根据用户需求的主题或用户的学习情况提供知识推荐务",
+  "prompt": "",
+  "keywords": [ "知识推荐", "教育", "知识搜索" ],
+  "agents": ["resources_tool", "recommend"],
+  "params":[
+    {
+      "title":"subject",
+      "name":"subject",
+      "type":"String",
+      "notnull":true,
+      "description": "科目学科",
+      "defaultValue":""
+    },{
+      "title":"chapter",
+      "name":"chapter",
+      "type":"String",
+      "notnull":true,
+      "description": "章节",
+      "defaultValue":""
+    }
+  ],
+  "results":[
+    {
+      "title":"result",
+      "name":"result",
+      "type":"String",
+      "notnull":true,
+      "description":"任务结果",
+      "defaultValue":""
+    }
+  ]
+}

@@ -7,7 +7,7 @@
   "keywords": ["TBot", "任务"],
   "reference":"http://xxx/Scheduling/机器ID",
   "manual":"http://wechat.com/xxxx.html",
-  "agents": ["worker", "ocr_tool", "recommend"],
+  "agents": ["worker", "ocr_tool"],
   "params":[
     { 
       "title":"task", 

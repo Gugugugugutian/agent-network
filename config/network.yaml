@@ -6,7 +6,8 @@ description: "计算智能体网络"
 
 # 为了完成任务的计划，通过调用 group 完成任务
 groups:
-  - TBotGroup
+  - "RecommendGroup"
+  - "TBotGroup"
 
 # 任务执行过程中的上下文信息（如返回值等），用于 group 之间的信息传递
 context:
